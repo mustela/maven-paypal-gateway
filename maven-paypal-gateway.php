@@ -13,10 +13,7 @@ namespace MavenPaypalGateway;
 
 // Exit if accessed directly 
 if ( ! defined( 'ABSPATH' ) ) exit;
-
-//We need to load the library
-\Maven\Core\Loader::load(__DIR__, '/lib/Mixpanel.php');
-				
+ 				
 use Maven\Settings\OptionType,
 	Maven\Settings\Option;
 
@@ -37,7 +34,7 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
         $this->setTestUrl( "https://api-3t.sandbox.paypal.com/nvp" );
         $this->setParameterPrefix( "" );
         $this->setItemDelimiter( "|" );
-        $this->setName( "PaypalPro" );
+        $this->setName( "Paypal" );
         $this->setManageProfile( true );
 
         $defaultOptions = array(
@@ -160,6 +157,17 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 	public function getAvsCode () {
 		
 	}
+	
+	public function register( $gateways ){
+		
+		$gateways[$this->getKey()] = $this;
+		
+		return $gateways;
+	}
 
 }
  
+
+
+$paypalGateway = new PaypalGateway();
+\Maven\Core\HookManager::instance()->addFilter('maven/gateways/register', array($paypalGateway,'register'));
