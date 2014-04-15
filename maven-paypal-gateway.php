@@ -24,7 +24,6 @@ use Maven\Settings\OptionType,
  */
 class PaypalGateway extends \Maven\Gateways\Gateway {
     
-     
 
     public function __construct() {
 
@@ -35,7 +34,6 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
         $this->setParameterPrefix( "" );
         $this->setItemDelimiter( "|" );
         $this->setName( "Paypal" );
-        $this->setManageProfile( true );
 
         $defaultOptions = array(
             new Option(
@@ -75,24 +73,30 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		
 		// Let people adjust the settings
 		$settings = \Maven\Core\HookManager::instance()->applyFilters('maven/gateway/settings', $this->getSettings() );
-		 
+		$this->addSettings($settings);
 		
-		$config = array();
+		$config = array(
+			'use_proxy' => false,
+			'proxy_host' => "",
+			'proxy_port' => "",
+			'return_url' => "",
+			'cancel_url' => ""
+		);
+		
 		$authorizationType = "";
-		
+		 
 		if ( $this->isTestMode() ){
 			$config['api_username'] = $this->getSetting( 'usernameTest' );
-			$config['api_username'] = $this->getSetting( 'passwordTest' );
-			$config['api_username'] = $this->getSetting( 'signatureTest' );
+			$config['api_password'] = $this->getSetting( 'passwordTest' );
+			$config['api_signature'] = $this->getSetting( 'signatureTest' );
 			$authorizationType = $this->getSetting( 'authorizationTypeTest' );
 			
 		}else{
 			$config['api_username'] = $this->getSetting( 'username' );
-			$config['api_username'] = $this->getSetting( 'password' );
-			$config['api_username'] = $this->getSetting( 'signature' );
+			$config['api_password'] = $this->getSetting( 'password' );
+			$config['api_signature'] = $this->getSetting( 'signature' );
 			$authorizationType = $this->getSetting( 'authorizationType' );
 		}
-			
 		
 		// Create instance of the phpPayPal class
 		$paypal = new \phpPayPal($config, $this->isTestMode());
