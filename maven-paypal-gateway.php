@@ -112,10 +112,11 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 
 		// Credit Card Information (required)
 		$paypal->credit_card_number = $this->getCCNumber();
-		$paypal->credit_card_type =  $this->getCcType();
+		$paypal->credit_card_type = $this->convertCreditCard( $this->getCcType() );
 		$paypal->cvv2_code = $this->getCCVerificationCode();
 		$paypal->expire_date = $this->getCCMonth().$this->getCCYear();
 
+		
 		// Billing Details (required)
 		$paypal->first_name = $this->getFirstName();
 		$paypal->last_name = $this->getLastName();
@@ -139,7 +140,7 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 
 		// Perform the payment
 		$result = $paypal->do_direct_payment();
-
+		
 		if ($result === false) {
 			
 			$this->setError(true);
@@ -157,6 +158,18 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 
 		}
     }
+	
+	private function convertCreditCard($cc){
+		
+		switch($cc){
+			case "Visa":
+				return "Visa";
+			case "MC":
+				return "MasterCard";
+		}
+		
+		return false;
+	}
 
 	public function getAvsCode () {
 		
