@@ -1365,7 +1365,7 @@ class phpPayPal {
 		//NVPRequest for submitting to server
 		$nvpreq = "METHOD=".urlencode($methodName)."&VERSION=".urlencode($this->VERSION)."&PWD=".urlencode($this->API_PASSWORD).
 				"&USER=".urlencode($this->API_USERNAME)."&SIGNATURE=".urlencode($this->API_SIGNATURE).$nvpStr;
-		
+ 		
 		//setting the nvpreq as POST FIELD to curl
 		curl_setopt($ch,CURLOPT_POSTFIELDS,$nvpreq);
 	

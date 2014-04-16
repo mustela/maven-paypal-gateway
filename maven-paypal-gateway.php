@@ -127,6 +127,8 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		$paypal->phone_number = $this->getPhone();
 		$paypal->country_code = $this->getCountry();
 		$paypal->email = $this->getEmail();
+		$paypal->amount_handling = 0;
+		$paypal->amount_tax = 0;
 		
 		if($this->hasOrderItems())
         {
