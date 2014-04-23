@@ -73,7 +73,7 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		
 		// Let people adjust the settings
 		$settings = \Maven\Core\HookManager::instance()->applyFilters('maven/gateway/settings', $this->getSettings() );
-		$this->addSettings($settings);
+		$this->updateSettings($settings);
 		
 		$config = array(
 			'use_proxy' => false,
