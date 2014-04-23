@@ -1350,7 +1350,7 @@ class phpPayPal {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$this->API_ENDPOINT);
 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
-	
+		\Maven\Loggers\Logger::log()->message( 'MavenPaypalGateway/phpPayPal/hash_call: API ENDPOINT: '. $this->API_ENDPOINT);
 		//turning off the server and peer verification(TrustManager Concept).
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -1369,6 +1369,7 @@ class phpPayPal {
 		//setting the nvpreq as POST FIELD to curl
 		curl_setopt($ch,CURLOPT_POSTFIELDS,$nvpreq);
 	
+		\Maven\Loggers\Logger::log()->message( 'MavenPaypalGateway/phpPayPal/hash_call: Fields: '. $nvpreq);
 		//getting response from server
 		$response = curl_exec($ch);
 	
