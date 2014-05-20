@@ -1080,6 +1080,7 @@ class phpPayPal {
 		
 		/* Make the API call to PayPal, using API signature.
 		   The API response is stored in an associative array called $this->Response */
+		//var_dump($nvpstr);
 		$this->Response = $this->hash_call("DoDirectPayment", $nvpstr);
 		
 		// Format our response and return the outcome
@@ -1371,6 +1372,10 @@ class phpPayPal {
 	
 		\Maven\Loggers\Logger::log()->message( 'MavenPaypalGateway/phpPayPal/hash_call: Fields: '. $nvpreq);
 		//getting response from server
+		//var_dump($this->API_ENDPOINT);
+		
+		//print_r($nvpreq);
+		//die();
 		$response = curl_exec($ch);
 	
 		//convrting NVPResponse to an Associative Array

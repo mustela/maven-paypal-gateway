@@ -106,7 +106,7 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 
 		// Order Totals (amount_total is required)
 		$paypal->amount_total = $this->getAmount();
-		$paypal->amount_shipping = $this->getShippingAmount();
+		//$paypal->amount_shipping = $this->getShippingAmount();
 
 		// Credit Card Information (required)
 		$paypal->credit_card_number = $this->getCCNumber();
