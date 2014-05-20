@@ -12,11 +12,11 @@
 namespace MavenPaypalGateway;
 
 // Exit if accessed directly 
-if ( ! defined( 'ABSPATH' ) )
+if ( !defined( 'ABSPATH' ) )
 	exit;
 
 use Maven\Settings\OptionType,
-    Maven\Settings\Option;
+	Maven\Settings\Option;
 
 /**
  * Description 
@@ -25,7 +25,7 @@ use Maven\Settings\OptionType,
  */
 class PaypalGateway extends \Maven\Gateways\Gateway {
 
-	public function __construct() {
+	public function __construct () {
 
 		parent::__construct();
 
@@ -36,36 +36,36 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		$this->setName( "Paypal" );
 
 		$defaultOptions = array(
-		    new Option(
-			    "authorizationType", "Authorization Type", '', '', OptionType::DropDown
-		    ),
-		    new Option(
-			    "authorizationTypeTest", "Authorization Type Test", 'Authorization', '', OptionType::DropDown // Sale is the default one
-		    ),
-		    new Option(
-			    "username", "Username", '', '', OptionType::Input
-		    ),
-		    new Option(
-			    "password", "Password", '', '', OptionType::Input
-		    ),
-		    new Option(
-			    "signature", "Signature", '', '', OptionType::Input
-		    ),
-		    new Option(
-			    "usernameTest", "Username", '', '', OptionType::Input
-		    ),
-		    new Option(
-			    "passwordTest", "Password", '', '', OptionType::Input
-		    ),
-		    new Option(
-			    "signatureTest", "Signature", '', '', OptionType::Input
-		    )
+			new Option(
+					"authorizationType", "Authorization Type", '', '', OptionType::DropDown
+			),
+			new Option(
+					"authorizationTypeTest", "Authorization Type Test", 'Authorization', '', OptionType::DropDown // Sale is the default one
+			),
+			new Option(
+					"username", "Username", '', '', OptionType::Input
+			),
+			new Option(
+					"password", "Password", '', '', OptionType::Input
+			),
+			new Option(
+					"signature", "Signature", '', '', OptionType::Input
+			),
+			new Option(
+					"usernameTest", "Username", '', '', OptionType::Input
+			),
+			new Option(
+					"passwordTest", "Password", '', '', OptionType::Input
+			),
+			new Option(
+					"signatureTest", "Signature", '', '', OptionType::Input
+			)
 		);
 
 		$this->addSettings( $defaultOptions );
 	}
 
-	public function execute() {
+	public function execute () {
 
 		//Load the library 
 		\Maven\Core\Loader::load( __DIR__, '/lib/phpPayPal.php' );
@@ -75,11 +75,11 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		$this->updateSettings( $settings );
 
 		$config = array(
-		    'use_proxy' => false,
-		    'proxy_host' => "",
-		    'proxy_port' => "",
-		    'return_url' => "",
-		    'cancel_url' => ""
+			'use_proxy' => false,
+			'proxy_host' => "",
+			'proxy_port' => "",
+			'return_url' => "",
+			'cancel_url' => ""
 		);
 
 		$authorizationType = "";
@@ -106,7 +106,6 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 
 		// Order Totals (amount_total is required)
 		$paypal->amount_total = $this->getAmount();
-		//$paypal->amount_shipping = $this->getShippingAmount();
 
 		// Credit Card Information (required)
 		$paypal->credit_card_number = $this->getCCNumber();
@@ -128,6 +127,17 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		$paypal->amount_handling = 0;
 		$paypal->amount_tax = 0;
 
+		// Check for disccounts. 
+		// If disscounts exists, we need to apply it to the shipping amount, since Paypal, doesn't provide a built-in feature to manage it.
+		if ( $this->getDiscountAmount() > 0 && $this->getShippingAmount() ) {
+			
+			// Lets replace the shipping with an item
+			$paypal->amount_shipping = 0;
+			
+			$paypal->add_item( 'Discount', 99999, 1, false, $this->getDiscountAmount() * -1 );
+			$paypal->add_item( 'Shipping', 999999, 1, false, $this->getShippingAmount() );
+		}
+
 		if ( $this->hasOrderItems() ) {
 			$items = $this->getOrderItems();
 
@@ -136,9 +146,6 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 			}
 		}
 
-		if ( $this->getDiscountAmount() > 0 ) {
-			$paypal->add_item( 'DISCOUNT', 99999, 1, false, $this->getDiscountAmount() * -1 );
-		}
 
 		// Perform the payment
 		$result = $paypal->do_direct_payment();
@@ -150,7 +157,7 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		} else {
 
 			$this->setApproved( true );
-			if ( $paypal->Response && isset( $paypal->Response[ 'TRANSACTIONID' ] ) && ! empty( $paypal->Response[ 'TRANSACTIONID' ] ) ) {
+			if ( $paypal->Response && isset( $paypal->Response[ 'TRANSACTIONID' ] ) && !empty( $paypal->Response[ 'TRANSACTIONID' ] ) ) {
 				$this->setTransactionId( $paypal->Response[ 'TRANSACTIONID' ] );
 			} else {
 				$this->setTransactionId( -1 );
@@ -158,7 +165,7 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		}
 	}
 
-	private function convertCreditCard( $cc ) {
+	private function convertCreditCard ( $cc ) {
 
 		switch ( $cc ) {
 			case "Visa":
@@ -170,11 +177,11 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		return false;
 	}
 
-	public function getAvsCode() {
+	public function getAvsCode () {
 		
 	}
 
-	public function register( $gateways ) {
+	public function register ( $gateways ) {
 
 		$gateways[ $this->getKey() ] = $this;
 
