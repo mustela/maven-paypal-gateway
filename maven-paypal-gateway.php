@@ -126,6 +126,7 @@ class PaypalGateway extends \Maven\Gateways\Gateway {
 		$paypal->email = $this->getEmail();
 		$paypal->amount_handling = 0;
 		$paypal->amount_tax = 0;
+		$paypal->amount_shipping = $this->getShippingAmount();
 
 		// Check for disccounts. 
 		// If disscounts exists, we need to apply it to the shipping amount, since Paypal, doesn't provide a built-in feature to manage it.
